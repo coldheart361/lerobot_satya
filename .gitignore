@@ -1,0 +1,6 @@
+sam2.1_hiera_tiny.pt
+*.pt
+*.npy
+*.pth
+__pycache__/
+*.pyc
