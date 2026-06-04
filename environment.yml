@@ -1,0 +1,31 @@
+name: rekep_mac
+channels:
+  - conda-forge
+  - defaults
+dependencies:
+  - python=3.11
+  - numpy
+  - scipy
+  - pillow
+  - pyyaml
+  - matplotlib
+  - pip
+  - pip:
+    # PyTorch — installed via pip for proper MPS (Apple Silicon) support
+    - torch
+    - torchvision
+
+    # Vision models
+    - transformers
+    - huggingface_hub
+    - scikit-learn
+
+    # OpenCV
+    - opencv-python
+
+    # OpenRouter / OpenAI API
+    - openai
+
+    # Robot control
+    - ikpy
+    - lerobot
