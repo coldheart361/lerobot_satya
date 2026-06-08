@@ -1,0 +1,12 @@
+# Ignore heavy models and datasets
+*.pt
+*.safetensors
+*.npy
+image/
+calibration/
+
+# Ignore Python/OS junk
+__pycache__/
+.DS_Store
+venv/
+.ipynb_checkpoints/
