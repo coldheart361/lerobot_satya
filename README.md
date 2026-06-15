@@ -32,7 +32,7 @@ lerobot/
 └── so101.urdf              ← robot kinematic model
 ```
 
-> **All main work is in `run_record_skills/`.** See its [README](run_record_skills/README.md) for details.
+> **All main work is in `run_record_skills/`.** See its [README](run_record_skills/run_record_skills.md) for details.
 
 ## Quick Start
 
