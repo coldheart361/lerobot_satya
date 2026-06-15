@@ -1,5 +1,5 @@
 """
-register_3d_3d.py
+extrinsics.py
 =================
 3D-3D camera -> robot calibration (the "mentor's approach").
 
@@ -80,25 +80,19 @@ def residuals(src, dst, R, t, s=1.0):
 
 # ── example wiring ────────────────────────────────────────────────────────────
 if __name__ == "__main__":
-    K = np.load("calibration/camera_matrix.npy")
+    K = np.load("intrinsics/camera_matrix.npy")
 
     # One row per calibration point. Use >= 4 (8+ better), NON-coplanar.
     #   (u, v)       : pixel in the image (click the point)
     #   depth_cm     : METRIC depth at that pixel (from metricized DA-V2)
     #   robot_xyz_cm : same point in robot base frame (touch with gripper, read TCP)
     CORR = [
-        ( u,   v,   depth_cm, (Xr,    Yr,    Zr) ),
-        (137, 432,  61.2,    (34.25,  3.51,  8.67)),
-        (812, 455,  61.2,    (34.25,  3.51,  8.67)),
-        (812, 455,  61.2,    (34.25,  3.51,  8.67)),
-        (812, 455,  61.2,    (34.25,  3.51,  8.67)),
-        (812, 455,  61.2,    (34.25,  3.51,  8.67)),
-        (812, 455,  61.2,    (34.25,  3.51,  8.67)),
-        (812, 455,  61.2,    (34.25,  3.51,  8.67)),
-        (812, 455,  61.2,    (34.25,  3.51,  8.67)),
-        (812, 455,  61.2,    (34.25,  3.51,  8.67)),
-        (812, 455,  61.2,    (34.25,  3.51,  8.67)),
-        (640, 380,  58.0,    (37.07,  9.47,  9.91)),
+    (455,  49, 53.0, (23.74939840723337,  -24.355203459733183, 14.661667768902747)),
+    (391, 265, 50.0, (31.745888367356763, -22.840972947293835,  4.387336664098157)),
+    (540, 231, 56.2, (20.585309100204668, -17.09229351642986,   3.4625597115252553)),
+    (693, 284, 61.6, (13.282899595189827,  -8.177240366805666,  0.6861019017347376)),
+    (768, 289, 61.1, (12.731929844354772,  -3.918710043230731,  0.745924014874896)),
+    (585, 501, 45.6, (36.37376820607102,   -9.909119137765366, -3.2578856327563743)),
     ]
     if not CORR:
         raise SystemExit("Fill in CORR with your data first.")
@@ -108,7 +102,7 @@ if __name__ == "__main__":
 
     # depth already metric -> rigid. If camera points are only up-to-scale,
     # set with_scale=True.
-    R, t, s = umeyama(p_cam, p_rob, with_scale=True)
+    R, t, s = umeyama(p_cam, p_rob, with_scale=False)
     T = build_transform(R, t, s)
     err = residuals(p_cam, p_rob, R, t, s)
 
@@ -117,5 +111,5 @@ if __name__ == "__main__":
     print("per-point residual (cm):", np.round(err, 2))
     print(f"mean residual: {err.mean():.2f} cm   max: {err.max():.2f} cm")
 
-    np.save("calibration/T_base_camera.npy", T)
-    print("saved -> calibration/T_base_camera.npy")
+    np.save("T_base_camera.npy", T)
+    print("saved -> T_base_camera.npy")

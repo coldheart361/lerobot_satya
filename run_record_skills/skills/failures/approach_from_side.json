@@ -1,0 +1,12 @@
+{
+  "id": "approach_from_top_instead_of_side",
+  "category": "grasp_orientation",
+  "description": "",
+  "bad_example": {
+    "object": "standing stapler box",
+    "what_happened": "fingers tried to close top-to-bottom on a tall box - hit the box top, could not grip the sides"
+  },
+  "correct_pattern": {
+    "rule": "For any object with low elevation approach, approach from the side rather than from above, meaning offsetb the X and Y axis"
+  }
+}

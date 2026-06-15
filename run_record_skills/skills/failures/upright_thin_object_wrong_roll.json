@@ -1,0 +1,20 @@
+{
+  "id": "upright_thin_object_wrong_roll",
+  "category": "grasp_orientation",
+  "description": "Used gripper_roll=0 for a standing thin upright object. Fingers opened vertically, could not grip the sides.",
+  "bad_example": {
+    "object": "standing stapler box",
+    "approach_elevation_deg": 45,
+    "gripper_roll_deg": 0,
+    "what_happened": "Fingers tried to close top-to-bottom on a tall box — no grip surface"
+  },
+  "correct_pattern": {
+    "rule": "For any thin object standing upright (like a long standing box or pencil), use gripper_roll=90 so fingers open HORIZONTALLY and can wrap around the object sides.",
+    "approach_elevation_deg": 0,
+    "gripper_roll_deg": 90
+  },
+  "gripper_roll_guide": {
+    "roll=0":  "fingers open VERTICALLY  — good for flat objects lying down",
+    "roll=90": "fingers open HORIZONTALLY — good for standing thin objects"
+  }
+}

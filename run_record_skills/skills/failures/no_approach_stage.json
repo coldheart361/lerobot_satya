@@ -1,0 +1,15 @@
+{
+  "id": "no_approach_stage",
+  "category": "stage_structure",
+  "description": "Skipped approach stage, gripper never opened before grasping",
+  "bad_example": {
+    "STAGE_NAMES": ["grasp_tape_roll", "lift_slightly"],
+    "STAGE_GRIPPER_ACTION": ["closed", "closed"],
+    "what_happened": "Robot arrived at tape with gripper already closed. Could not grasp."
+  },
+  "correct_pattern": {
+    "STAGE_NAMES": ["approach_tape_roll", "grasp_tape_roll", "lift_slightly"],
+    "STAGE_GRIPPER_ACTION": ["open", "closed", "closed"],
+    "rule": "STAGE_GRIPPER_ACTION[0] must always be open. Approach stage always comes first."
+  }
+}

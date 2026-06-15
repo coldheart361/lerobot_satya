@@ -1,6 +1,30 @@
-sam2.1_hiera_tiny.pt
+# model weights (too large for git)
 *.pt
-*.npy
 *.pth
+*.ckpt
+*.safetensors
+
+# generated outputs
+image/
+reachability/
+vlm_query/
+outputs/
+run/
+
+# data
+data/
+
+# python
 __pycache__/
 *.pyc
+*.pyo
+.env
+
+# large numpy/media files
+*.pkl
+
+# mac
+.DS_Store
+
+# test folders
+test try/

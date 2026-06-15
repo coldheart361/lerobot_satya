@@ -22,7 +22,7 @@ from lerobot.robots.so101_follower import SO101Follower, SO101FollowerConfig
 
 # ── CONFIG ────────────────────────────────────────────────────────────────────
 PORT = "/dev/tty.usbmodem5B140297181"
-URDF_PATH    = "../so101.urdf"
+URDF_PATH    = "../../so101.urdf"
 OUTPUT_FILE  = "stickers.json"
 
 TCP_OFFSET_M = np.array([0.004016, -0.004152, 0.015589, 1.0])

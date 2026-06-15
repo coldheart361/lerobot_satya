@@ -1,0 +1,15 @@
+{
+  "id": "side_approach_for_wide_object",
+  "category": "stage_structure",
+  "description": "tried to grasp a wide object (tape roll) with a side approach, but the object was too wide to fit between the fingers. Need to approach from above so fingers can close top-to-bottom on the tape roll.",
+  "bad_example": {
+    "STAGE_NAMES": ["grasp_tape_roll", "lift_slightly"],
+    "STAGE_GRIPPER_ACTION": ["closed", "closed"],
+    "what_happened": "Robot arrived at tape with gripper already closed. Could not grasp."
+  },
+  "correct_pattern": {
+    "STAGE_NAMES": ["approach_tape_roll", "grasp_tape_roll", "lift_slightly"],
+    "STAGE_GRIPPER_ACTION": ["open", "closed", "closed"],
+    "rule": "STAGE_GRIPPER_ACTION[0] must always be open. Approach stage always comes first."
+  }
+}

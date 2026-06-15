@@ -12,7 +12,7 @@ Pipeline (matches the paper):
    -> per mask: PCA(features, 3)        : strip texture artifacts
    -> per mask: k-means (k=5)           : candidate points (median per cluster)
    -> project candidates to 3D          : via RGB-D points array (world frame)
-   -> MeanShift (bandwidth 8cm)         : merge nearby duplicates
+   -> MeanShift (bandwidth 5cm)         : merge nearby duplicates
    -> filter to workspace bounds
    -> overlay numbered marks on RGB     : for the constraint VLM
 
@@ -34,37 +34,26 @@ from sklearn.decomposition import PCA
 from sklearn.cluster import KMeans, MeanShift
 from mobile_sam import sam_model_registry, SamAutomaticMaskGenerator
 
-<<<<<<< HEAD
-=======
 
->>>>>>> 78144f9f456e183d325928f6e51f1d21ec5d62c8
 from transformers import AutoModel, pipeline
 
 
 # ── ImageNet normalisation for DINOv2 ──────────────────────────────────────────
 _IMAGENET_MEAN = [0.485, 0.456, 0.406]
 _IMAGENET_STD  = [0.229, 0.224, 0.225]
-_PATCH = 16
+_PATCH = 14  # DINOv2 ViT-S/14 has 14x14 patch tokens
 
 
 class KeypointProposer:
     def __init__(
         self,
         device=None,
-<<<<<<< HEAD
-        dino_model="facebook/dinov3-vits16-pretrain-lvd1689m",
-=======
         dino_model="facebook/dinov2-with-registers-small",
->>>>>>> 78144f9f456e183d325928f6e51f1d21ec5d62c8
         sam_model="facebook/sam-vit-base",
         k_per_mask=5,                 # k-means clusters per mask (paper: 5)
-        meanshift_bandwidth_m=0.08,   # 8 cm (paper)
-        target_long_side=518,         # DINOv2 input long side (multiple of 14)
-<<<<<<< HEAD
-        min_mask_pixels=400,          # ignore tiny masks
-=======
-        min_mask_pixels=100,          # ignore tiny masks
->>>>>>> 78144f9f456e183d325928f6e51f1d21ec5d62c8
+        meanshift_bandwidth_m=0.03,   # 3 cm 
+        target_long_side=756,         # DINOv2 input long side (multiple of 14)
+        min_mask_pixels=300,          # ignore tiny masks
         workspace_bounds=None,        # (lo[3], hi[3]) in metres, world frame
         load_sam=True,
     ):
@@ -84,11 +73,7 @@ class KeypointProposer:
         if load_sam:
             print(f"[KP] loading MobileSAM ...")
             from mobile_sam import sam_model_registry, SamAutomaticMaskGenerator
-<<<<<<< HEAD
-            sam = sam_model_registry["vit_t"](checkpoint="mobile_sam.pt")
-=======
-            sam = sam_model_registry["vit_t"](checkpoint="../mobile_sam.pt")
->>>>>>> 78144f9f456e183d325928f6e51f1d21ec5d62c8
+            sam = sam_model_registry["vit_t"](checkpoint="../../mobile_sam.pt")
             sam.to("cpu")
             sam.eval()
             self.sam_generator = SamAutomaticMaskGenerator(sam)
@@ -129,14 +114,10 @@ class KeypointProposer:
             m = np.asarray(r["segmentation"]).astype(bool)
             if m.sum() >= self.min_mask_pixels:
                 masks.append(m)
-<<<<<<< HEAD
+        # self._save_mask_debug(rgb, masks)
         return masks
 
-=======
-        self._save_mask_debug(rgb, masks)   # ← add this
-        return masks
-
-    def _save_mask_debug(self, rgb, masks, filename="debug_masks.png"):
+    def _save_mask_debug(self, rgb, masks, filename="image/debug_masks.png"):
         """Overlay all masks on the image with different colors."""
         out = rgb.copy().astype(np.float32)
         rng = np.random.default_rng(0)
@@ -147,7 +128,6 @@ class KeypointProposer:
         Image.fromarray(out).save(filename)
         print(f"[KP] saved {filename} ({len(masks)} masks)")
 
->>>>>>> 78144f9f456e183d325928f6e51f1d21ec5d62c8
     # ── 3. per-mask PCA + k-means -> candidate pixels ────────────────────────────
     def _cluster(self, features, masks):
         """-> list of (py, px, mask_id)."""
@@ -170,8 +150,11 @@ class KeypointProposer:
                 if len(idx) == 0:
                     continue
                 # median pixel position of the cluster = candidate
-                cy = int(np.median(ys[idx]))
-                cx = int(np.median(xs[idx]))
+                centroid = km.cluster_centers_[c]
+                dists = np.linalg.norm(feats[idx] - centroid, axis=1)
+                best = idx[np.argmin(dists)]
+                cy = ys[best]
+                cx = xs[best]
                 candidates.append((cy, cx, mid))
         return candidates
 
@@ -240,11 +223,7 @@ class KeypointProposer:
         """
         rgb = np.asarray(rgb)
         # resize to manageable size before processing
-<<<<<<< HEAD
-        MAX_SIDE = 800
-=======
         MAX_SIDE = 1280 
->>>>>>> 78144f9f456e183d325928f6e51f1d21ec5d62c8
         rgb_orig = rgb.copy()
         H0, W0 = rgb.shape[:2]
         if max(H0, W0) > MAX_SIDE:

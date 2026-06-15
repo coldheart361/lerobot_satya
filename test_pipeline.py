@@ -22,7 +22,7 @@ from openai import OpenAI
 
 # ── import the proposer we wrote ──────────────────────────────────────────────
 sys.path.insert(0, os.path.dirname(__file__))
-from keypoint_proposal import KeypointProposer
+from run.keypoint_proposal import KeypointProposer
 
 TASK = "(single-arm) pick up the double-coated tape and lift it"
 
